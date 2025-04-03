@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Memory Game</title>
+  <style>
+    .card-grid {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .card {
+      width: 80px;
+      height: 120px;
+      background: lightgray;
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Memorize the card order!</h2>
+<div class="card-grid" id="cardGrid"></div>
+<button onclick="startGame()">Start</button>
+<p id="result"></p>
+
+<script>
+  const cardOrder = ['A', 'K', 'Q', 'J', '10'];
+  let shownOrder = [];
+
+  function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  function startGame() {
+    const grid = document.getElementById('cardGrid');
+    const shuffled = shuffle([...cardOrder]);
+    shownOrder = shuffled;
+    grid.innerHTML = '';
+    shuffled.forEach(value => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.textContent = value;
+      grid.appendChild(card);
+    });
+
+    setTimeout(() => {
+      grid.innerHTML = '';
+      shownOrder.forEach((_, i) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.textContent = '?';
+        card.onclick = () => revealCard(card, i);
+        grid.appendChild(card);
+      });
+    }, 3000);
+  }
+
+  let guessIndex = 0;
+  function revealCard(card, index) {
+    card.textContent = shownOrder[index];
+    if (shownOrder[index] !== cardOrder[guessIndex]) {
+      document.getElementById('result').textContent = 'Wrong! Try again.';
+    } else {
+      guessIndex++;
+      if (guessIndex === cardOrder.length) {
+        document.getElementById('result').textContent = 'Correct order!';
+      }
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,77 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Memory Game</title>
-  <style>
-    .card-grid {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .card {
-      width: 80px;
-      height: 120px;
-      background: lightgray;
-      font-size: 24px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-    }
-  </style>
+  <title>Number Memory</title>
 </head>
 <body>
 
-<h2>Memorize the card order!</h2>
-<div class="card-grid" id="cardGrid"></div>
-<button onclick="startGame()">Start</button>
-<p id="result"></p>
+<h2>Memorize This Number:</h2>
+<p id="numberDisplay" style="font-size: 32px;"></p>
+<input id="userInput" placeholder="Type the number here" style="font-size: 24px;">
+<button onclick="checkNumber()">Check</button>
+<p id="feedback"></p>
 
 <script>
-  const cardOrder = ['A', 'K', 'Q', 'J', '10'];
-  let shownOrder = [];
+  let randomNumber = "";
 
-  function shuffle(array) {
-    return array.sort(() => Math.random() - 0.5);
-  }
-
-  function startGame() {
-    const grid = document.getElementById('cardGrid');
-    const shuffled = shuffle([...cardOrder]);
-    shownOrder = shuffled;
-    grid.innerHTML = '';
-    shuffled.forEach(value => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.textContent = value;
-      grid.appendChild(card);
-    });
-
+  function generateNumber(length = 6) {
+    randomNumber = "";
+    for (let i = 0; i < length; i++) {
+      randomNumber += Math.floor(Math.random() * 10);
+    }
+    document.getElementById("numberDisplay").textContent = randomNumber;
     setTimeout(() => {
-      grid.innerHTML = '';
-      shownOrder.forEach((_, i) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.textContent = '?';
-        card.onclick = () => revealCard(card, i);
-        grid.appendChild(card);
-      });
+      document.getElementById("numberDisplay").textContent = "";
     }, 3000);
   }
 
-  let guessIndex = 0;
-  function revealCard(card, index) {
-    card.textContent = shownOrder[index];
-    if (shownOrder[index] !== cardOrder[guessIndex]) {
-      document.getElementById('result').textContent = 'Wrong! Try again.';
-    } else {
-      guessIndex++;
-      if (guessIndex === cardOrder.length) {
-        document.getElementById('result').textContent = 'Correct order!';
-      }
-    }
+  function checkNumber() {
+    const input = document.getElementById("userInput").value;
+    document.getElementById("feedback").textContent =
+      input === randomNumber ? "Correct!" : "Wrong, try again!";
   }
+
+  // Auto start
+  generateNumber();
 </script>
 
 </body>
